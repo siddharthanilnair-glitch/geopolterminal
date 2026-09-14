@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Indo-Pacific Terminal · Conflict × Climate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAFAF7;--panel:#fff;--ink:#15171C;--muted:#666B73;--faint:#9A9FA7;
+  --rule:#ECEBE4;--rule2:#DAD9D0;
+  --conflict:#B0473A;--climate:#2E7D6B;--nexus:#5B4A8A;
+  --mono:"Roboto Mono",ui-monospace,monospace;--sans:"Roboto",-apple-system,Segoe UI,sans-serif;
+  --head:"Roboto",-apple-system,Segoe UI,sans-serif;
+}
+body[data-theme=eink]{--paper:#E7E5DE;--panel:#F0EEE7;--rule:#D8D5CB;--rule2:#C4C1B6}
+body[data-theme=dusk]{--paper:#1E2024;--panel:#26292E;--ink:#E5E3DC;--muted:#A2A7AF;--faint:#6F757E;--rule:#32363C;--rule2:#41464E;--conflict:#D4705F;--climate:#63AC92;--nexus:#9585C6}
+body[data-theme=dusk] .tile:hover{box-shadow:0 4px 18px rgba(0,0,0,.4)}
+body[data-theme=phosphor]{--paper:#070A08;--panel:#0E130F;--ink:#D6EFD2;--muted:#8FB78B;--faint:#5C7C5A;--rule:#18211A;--rule2:#294029;--conflict:#FF7A5C;--climate:#4FE39B;--nexus:#A991F0}
+body[data-theme=phosphor] .tile:hover{box-shadow:0 0 16px rgba(94,212,154,.14)}
+body[data-theme=phosphor]::after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.14) 3px 4px);z-index:99}
+body[data-theme=phosphor] .row:hover{background:#111A13}
+body[data-theme=phosphor] .dot{box-shadow:0 0 6px currentColor}
+body[data-theme=phosphor] .wordmark{text-shadow:0 0 8px rgba(79,227,155,.45)}
+body[data-theme=phosphor] .mast{border-bottom-color:#294029}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:12px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100vh;overflow:hidden;letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+.mast{display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid var(--rule2);background:var(--panel);flex:none}
+.wordmark{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.wordmark span{color:var(--faint)}
+.axdots{display:flex;gap:5px}.axdots i{width:7px;height:7px;border-radius:50%}
+.tagline{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+.sp{flex:1}
+.stamp{font-family:var(--mono);font-size:9.5px;color:var(--muted)}
+.stamp b{color:var(--ink);font-weight:600}
+.stamp .warn{color:var(--conflict)}
+.mbtn{border:1px solid var(--rule2);background:transparent;color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:6px 11px;border-radius:3px;transition:.12s}
+.mbtn:hover{border-color:var(--ink);color:var(--ink)}
+.mbtn.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+body.norail .rail{display:none}
+.stat.click{cursor:pointer;user-select:none}
+.stat.click.on{box-shadow:inset 0 -3px 0 var(--ink)}
+.stats{display:flex;border-bottom:1px solid var(--rule);background:var(--panel);flex:none;overflow-x:auto;scrollbar-width:none}
+.stat{display:flex;flex-direction:column;gap:1px;padding:7px 18px;border-right:1px solid var(--rule);white-space:nowrap;min-width:96px}
+.stat .l{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
+.stat .v{font-family:var(--mono);font-size:12px;font-weight:600}
+.stat .v.c1{color:var(--conflict)}.stat .v.c2{color:var(--climate)}.stat .v.c3{color:var(--nexus)}
+
+.grid{display:flex;flex:1;min-height:0}
+.rail{width:230px;flex:none;border-right:1px solid var(--rule);background:var(--panel);overflow-y:auto;padding:14px 0 40px}
+.rg{padding:0 14px;margin-bottom:18px}
+.rh{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+.fi{display:flex;align-items:center;gap:8px;padding:5px 8px;margin:0 -8px;border-radius:4px;font-size:11.5px;font-weight:500;color:var(--muted);user-select:none;cursor:pointer;transition:.1s}
+.fi:hover{background:var(--paper);color:var(--ink)}
+.fi.on{background:var(--ink);color:var(--paper)}
+.fi .n{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--faint)}
+.fi.on .n{color:inherit;opacity:.6}
+.fi .sw{width:8px;height:8px;border-radius:2px;flex:none}
+.subwrap{margin:4px 0 0 6px;display:none}
+.subwrap.show{display:block}
+.sub{font-size:10.5px;padding:3.5px 8px}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 22px;border-bottom:1px solid var(--rule);background:var(--panel);flex:none}
+.crumb{font-family:var(--head);font-weight:700;font-size:12px;letter-spacing:-.02em}
+.crumb small{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;margin-left:9px;font-weight:400}
+.search{margin-left:auto;border:1px solid var(--rule2);border-radius:3px;padding:6px 10px;font-family:var(--mono);font-size:10px;width:200px;background:var(--paper);color:var(--ink)}
+.search:focus{outline:none;border-color:var(--ink)}
+.clr{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;border:0;background:none;text-decoration:underline;text-underline-offset:3px}
+
+.feed{flex:1;overflow-y:auto;padding:6px 0 60px;display:block}
+.row{position:relative;display:grid;grid-template-columns:14px 1fr auto;column-gap:12px;align-items:start;padding:9px 22px 9px 16px;border-bottom:1px solid var(--rule);cursor:default}
+.row:hover{background:var(--panel)}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex:none}
+.row .body{min-width:0}
+.row h3{margin:0;font-family:var(--head);font-size:12px;font-weight:500;line-height:1.35;letter-spacing:-.005em;overflow-wrap:anywhere}
+.row .sub2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:3px;font-family:var(--mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.row .sub2 .cls{color:var(--muted)}
+.row .right{display:flex;align-items:center;gap:8px;white-space:nowrap;font-family:var(--mono);font-size:8px;color:var(--faint);padding-top:2px}
+.row .star{position:static;font-size:11px}
+.row .inv{font-size:11px;margin:0}
+.row.wl{box-shadow:inset 3px 0 0 #C9922F}
+.alts{display:none;grid-column:2/4;padding-top:5px;font-family:var(--mono);font-size:8px}
+.alts a{color:var(--muted);text-decoration:underline;margin-right:8px}
+.empty{padding:60px 24px;text-align:center;color:var(--faint);font-family:var(--mono);font-size:10.5px;line-height:2}
+.empty b{color:var(--muted)}
+
+/* bookmark popover */
+.pop{position:absolute;z-index:60;background:var(--panel);border:1px solid var(--rule2);border-radius:6px;box-shadow:0 12px 32px rgba(20,22,27,.14);padding:12px 14px;width:280px}
+.pop h5{margin:0 0 8px;font-size:10.5px;font-weight:700}
+.tags{display:flex;flex-wrap:wrap;gap:5px;max-height:130px;overflow-y:auto;margin-bottom:8px}
+.tg{font-family:var(--mono);font-size:9px;border:1px solid var(--rule2);border-radius:3px;padding:2.5px 7px;color:var(--muted);background:none}
+.tg.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pop input,.pop textarea{width:100%;border:1px solid var(--rule2);border-radius:3px;font-family:var(--mono);font-size:9.5px;padding:5px 7px;background:var(--paper);color:var(--ink);margin-bottom:7px;resize:vertical}
+.pop .row{display:flex;gap:8px;justify-content:flex-end}
+.pop .row button{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:3px;border:1px solid var(--rule2);background:none;color:var(--muted)}
+.pop .row .go{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* drawers */
+.scrim{position:fixed;inset:0;background:rgba(20,22,27,.32);opacity:0;pointer-events:none;transition:.18s;z-index:40}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:560px;max-width:93vw;background:var(--panel);border-left:1px solid var(--rule2);transform:translateX(100%);transition:transform .2s;z-index:50;display:flex;flex-direction:column}
+.drawer.show{transform:translateX(0)}
+.dh{display:flex;align-items:center;gap:12px;padding:15px 20px;border-bottom:1px solid var(--rule)}
+.dh h2{font-weight:700;font-size:12px;margin:0}
+.dh .s{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
+.x{margin-left:auto;border:0;background:none;font-size:12px;color:var(--muted);line-height:1;cursor:pointer}
+.db{overflow-y:auto;padding:4px 0 30px}
+table.diag{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:9px}
+table.diag th{text-align:left;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;font-size:8px;padding:8px;font-weight:500}
+table.diag td{padding:6px 8px;border-bottom:1px solid var(--rule);color:var(--muted)}
+table.diag td:first-child{padding-left:20px}
+.ok{color:var(--climate)}.fail{color:var(--conflict)}.warn2{color:#B07C2C}
+.dsum{padding:12px 20px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:9.5px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.dsum b{color:var(--ink)}
+.about{padding:14px 20px;font-size:11px;color:var(--muted);line-height:1.6}
+.about h4{color:var(--ink);font-size:11px;margin:14px 0 5px;font-weight:700}
+.kws{display:flex;flex-wrap:wrap;gap:5px}
+.kws span{font-family:var(--mono);font-size:9px;background:var(--paper);border:1px solid var(--rule);padding:2px 6px;border-radius:2px}
+
+@media(max-width:860px){.rail{display:none}.search{width:120px}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <button class="mbtn" id="railT" title="toggle sidebar">☰</button>
+  <div class="wordmark">TERMINAL</div>
+  <div class="axdots" title="Conflict · Climate"><i style="background:var(--conflict)"></i><i style="background:var(--climate)"></i></div>
+  <div class="sp"></div>
+  <div class="stamp" id="stamp">loading…</div>
+  <button class="mbtn" id="bFeed">Feed</button>
+  <button class="mbtn" id="bMap">Maps</button>
+  <button class="mbtn" id="bMarks">Bookmarks</button>
+  <button class="mbtn" id="bBrief">Brief</button>
+  <button class="mbtn" id="bSrc">Sources</button>
+  <button class="mbtn" id="bAbout">About</button>
+  <button class="mbtn" id="themeT">Phosphor</button>
+</header>
+<div class="stats" id="stats"></div>
+<div class="grid">
+  <aside class="rail">
+    <div class="rg"><p class="rh">Axis</p><div id="axisNav"></div></div>
+    <div class="rg"><p class="rh">Region</p><div id="thNav"></div></div>
+    <div class="rg"><p class="rh">Focus</p><div id="focusNav"></div></div>
+    <div class="rg"><p class="rh">Tier</p><div id="tierNav"></div></div>
+    <div class="rg"><p class="rh">Watchlist</p><div id="wlNav"></div></div>
+    <div class="rg"><p class="rh">Zones</p><div id="zNav"></div></div>
+  </aside>
+  <section class="main">
+    <div class="bar">
+      <div class="crumb" id="crumb">All items <small id="crumbN"></small></div>
+      <button class="clr" id="clr" style="display:none">clear</button>
+      <button class="clr" id="sortT">sort: newest</button>
+      <input class="search" id="q" placeholder="search headlines…"/>
+    </div>
+    <div class="feed" id="feed"><div class="empty">loading data.json…</div></div>
+      <div id="maps"></div>
+      <div class="mviewer" id="mviewer"><div class="vbar"><button class="mbtn" id="mback">← Maps</button><b id="mvname"></b><span class="sp"></span><a class="mbtn" id="mvext" target="_blank" rel="noopener">Open in My Maps</a></div><iframe id="mvframe" loading="lazy" allowfullscreen></iframe></div>
+  </section>
+</div>
+
+<div id="brief"><div class="bh"><b>Daily Brief</b><span class="sp"></span><button class="mbtn" id="brCopy">Copy</button><button class="mbtn" id="brPrint">Print</button><button class="mbtn" id="brClose">Close</button></div><div class="bb" id="briefBody"></div></div>
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="dSrc"><div class="dh"><div><h2>Source diagnostics</h2><div class="s">from last Actions run</div></div><button class="x" data-x>×</button></div><div class="dsum" id="dsum"></div><div class="db"><table class="diag"><thead><tr><th>Source</th><th>Country</th><th>Tier</th><th>Method</th><th>Items</th><th>Status</th><th>ms</th></tr></thead><tbody id="dtb"></tbody></table></div></div>
+<div class="drawer" id="dAbout"><div class="dh"><div><h2>About</h2><div class="s">scope · tagging · bookmarks</div></div><button class="x" data-x>×</button></div><div class="db" id="aboutBody"></div></div>
+
+<script>
+const AXMETA={Conflict:{color:'var(--conflict)',subs:{kinetic:'Kinetic',maritime:'Maritime / gray-zone',posture:'Posture & exercises',insurgency:'Insurgency & internal'}},
+              Climate:{color:'var(--climate)',subs:{extreme:'Extreme weather',slowonset:'Slow-onset',humanitarian:'Displacement & humanitarian',response:'Response & adaptation'}}};
+const TIERS={INT:'International',REG:'Regional',LOC:'Local',SPEC:'Specialist',ALERT:'Alerts'};
+const FALLBACK_TAGS=['Pakistan','India','Oman','Yemen','Iran','Maldives','Bangladesh','Sri Lanka','Myanmar','Thailand','Malaysia','Singapore','Brunei','China','Taiwan','Vietnam','Philippines','Indonesia','Timor-Leste','Papua New Guinea','Australia','New Zealand'];
+const OWNER={state:'STATE',pub:'PUBLIC',ind:'INDEP',exile:'EXILE',igo:'IGO',priv:''};
+
+let DATA=null, VIEW='feed', SORT='new', HIST=null, prevLinks=null;
+function loadJSON(k,d){ try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;} }
+let WATCHKW=loadJSON('ipterm.watch',[]);
+let ZONES=loadJSON('ipterm.zones',[]);
+const saveWatch=()=>localStorage.setItem('ipterm.watch',JSON.stringify(WATCHKW));
+const saveZones=()=>localStorage.setItem('ipterm.zones',JSON.stringify(ZONES));
+function watchHit(a){ if(!WATCHKW.length) return false; const t=(a.title+' '+(a.desc||'')+' '+(a.countries||[]).join(' ')).toLowerCase(); return WATCHKW.some(k=>t.includes(k.toLowerCase())); }
+function hav(p,q){ const R=6371,dLa=(q[0]-p[0])*Math.PI/180,dLo=(q[1]-p[1])*Math.PI/180,la1=p[0]*Math.PI/180,la2=q[0]*Math.PI/180; const x=Math.sin(dLa/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLo/2)**2; return 2*R*Math.asin(Math.sqrt(x)); }
+function inZone(a,z){ return a.geo && hav(a.geo,z.center)<=z.km; }
+let F={axis:null,sub:null,theater:null,tier:null,country:null,watch:false,zone:null,band:null,q:''};
+const FOCUS=['Philippines','Indonesia'];
+let MARKS=loadMarks();
+
+/* ---------- load ---------- */
+async function boot(){
+  try{
+    const r=await fetch('./data.json?'+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw 0;
+    DATA=await r.json();
+    try{ const hr=await fetch('./history.json?'+Date.now(),{cache:'no-store'}); if(hr.ok) HIST=await hr.json(); }catch(e){}
+    render(); renderRail(); renderStats(); renderStamp(); notifyNew();
+  }catch(e){
+    document.getElementById('feed').innerHTML='<div class="empty"><b>No data.json found.</b><br>Run the "update-feeds" workflow once from the Actions tab,<br>then reload this page.</div>';
+    document.getElementById('stamp').textContent='no data';
+  }
+}
+function countryTags(){ return (DATA&&DATA.country_tags)||FALLBACK_TAGS; }
+function meta(code){ return (DATA&&DATA.source_meta&&DATA.source_meta[code])||{name:code,country:'',tier:'',owner:'priv',lean:''}; }
+
+/* ---------- filtering ---------- */
+function pass(a){
+  if(F.axis){ if(a.axis!==F.axis) return false; if(F.sub&&a.sub!==F.sub) return false; }
+  if(F.theater&&a.region!==F.theater) return false;
+  if(F.country&&!(a.countries||[]).includes(F.country)) return false;
+  if(F.band&&a.band!==F.band) return false;
+  if(F.watch&&!watchHit(a)) return false;
+  if(F.zone){ const z=ZONES.find(z=>z.name===F.zone); if(!z||!inZone(a,z)) return false; }
+  if(F.tier&&a.tier!==F.tier) return false;
+  if(F.q){ const q=F.q.toLowerCase(); if(!((a.title+' '+(a.desc||'')+' '+(a.countries||[]).join(' ')).toLowerCase().includes(q))) return false; }
+  return true;
+}
+function visible(){ let l=DATA?DATA.items.filter(pass):[]; if(SORT==='sev') l=[...l].sort((x,y)=>((y.sev||0)-(x.sev||0))||((Date.parse(y.date)||0)-(Date.parse(x.date)||0))); return l; }
+
+/* ---------- render ---------- */
+function ago(iso){ if(!iso)return '—'; const m=Math.round((Date.now()-Date.parse(iso))/6e4); if(m<1)return 'now'; if(m<60)return m+'m'; const h=Math.round(m/60); if(h<24)return h+'h'; return Math.round(h/24)+'d'; }
+function tile(a){
+  const m=meta(a.src);
+  const col=a.axis?AXMETA[a.axis].color:'var(--faint)';
+  const own=OWNER[m.owner]?' · '+OWNER[m.owner]:'';
+  const tip=`${m.name} · ${m.country}${own}${m.lean?' · lean '+m.lean:''}`;
+  const cls=a.axis?`${a.axis}${a.sub?' · '+(AXMETA[a.axis].subs[a.sub]||a.sub):''}`:'Untagged';
+  const cos=(a.countries&&a.countries.length?a.countries:(a.region?[a.region]:[])).slice(0,3).join(' · ');
+  const band=a.band?`<span class="bnd bnd-${a.band}" title="score ${a.sev??''}: ${a.sevWhy||''}">${a.band}</span>`:'';
+  const xn=(a.corrob||1)>1?`<span class="xn" data-xn>×${a.corrob}</span>`:'';
+  const alts=(a.also&&a.also.length)?`<div class="alts">also: ${a.also.map(x=>`<a href="${x.link}" target="_blank" rel="noopener">${x.src}</a>`).join('')}</div>`:'';
+  return `<div class="row${watchHit(a)?' wl':''}">
+    <span class="dot" style="background:${col};color:${col}" title="${cls}"></span>
+    <div class="body">
+      <h3><a href="${a.link}" target="_blank" rel="noopener">${a.title}</a></h3>
+      <div class="sub2"><span class="code" title="${tip}">${a.src}</span><span>${m.tier||a.tier}</span>${band}${xn}<span class="cls" style="color:${col}" title="matched: ${(a.hits||[]).join(', ')||'—'}">${cls}</span>${cos?`<span>${cos}</span>`:''}</div>
+    </div>
+    <div class="right"><span>${ago(a.date)}</span><button class="star${MARKS[a.link]?' on':''}" data-star="${encodeURIComponent(a.link)}" title="bookmark">★</button><button class="inv" data-inv="${encodeURIComponent(a.link)}" title="investigate">⋮</button></div>
+    ${alts}
+  </div>`;
+}
+function render(){
+  const feed=document.getElementById('feed');
+  if(VIEW==='marks'){ showPane('feed'); renderMarks(); return; }
+  if(VIEW==='maps'){ showPane('maps'); renderMapsFolder(); return; }
+  if(VIEW==='mview'){ showPane('mview'); return; }
+  showPane('feed');
+  const l=visible();
+  feed.innerHTML=(l.length?l.slice(0,400).map(tile).join(''):'<div class="empty">No items match the current filters.</div>');
+  const parts=[]; if(F.band)parts.push(F.band); if(F.country)parts.push(F.country); if(F.axis)parts.push(F.axis+(F.sub?' · '+(AXMETA[F.axis]?.subs[F.sub]||F.sub):'')); if(F.theater)parts.push(F.theater); if(F.tier)parts.push(TIERS[F.tier]);
+  document.getElementById('crumb').innerHTML=(parts.length?parts.join(' · '):'All items')+` <small id="crumbN">${l.length} items</small>`;
+  document.getElementById('clr').style.display=(F.axis||F.theater||F.tier||F.country||F.band||F.watch||F.zone||F.q)?'inline':'none';
+}
+function renderRail(){
+  if(!DATA)return;
+  const items=DATA.items;
+  const cnt=f=>items.filter(f).length;
+  const ax=document.getElementById('axisNav');
+  ax.innerHTML=
+    `<div class="fi${!F.axis?' on':''}" data-ax="">All<span class="n">${items.length}</span></div>`+
+    Object.keys(AXMETA).map(a=>{
+      const subs=Object.entries(AXMETA[a].subs).map(([k,lab])=>`<div class="fi sub${F.axis===a&&F.sub===k?' on':''}" data-ax="${a}" data-sub="${k}">${lab}<span class="n">${cnt(x=>x.axis===a&&x.sub===k)}</span></div>`).join('');
+      return `<div class="fi${F.axis===a&&!F.sub?' on':''}" data-ax="${a}"><span class="sw" style="background:${AXMETA[a].color}"></span>${a}<span class="n">${cnt(x=>x.axis===a)}</span></div>
+              <div class="subwrap${F.axis===a?' show':''}">${subs}</div>`;
+    }).join('');
+  const order=['South Asia','Southeast Asia'];
+  document.getElementById('thNav').innerHTML=
+    `<div class="fi${!F.theater?' on':''}" data-th="">Both regions</div>`+
+    order.map(t=>`<div class="fi${F.theater===t?' on':''}" data-th="${t}">${t}<span class="n">${cnt(x=>x.region===t)}</span></div>`).join('');
+  document.getElementById('focusNav').innerHTML=
+    `<div class="fi${!F.country?' on':''}" data-co="">All countries</div>`+
+    FOCUS.map(c=>`<div class="fi${F.country===c?' on':''}" data-co="${c}">${c}<span class="n">${cnt(x=>(x.countries||[]).includes(c))}</span></div>`).join('');
+  document.getElementById('tierNav').innerHTML=
+    `<div class="fi${!F.tier?' on':''}" data-tier="">All tiers</div>`+
+    Object.keys(TIERS).map(t=>`<div class="fi${F.tier===t?' on':''}" data-tier="${t}">${TIERS[t]}<span class="n">${cnt(x=>x.tier===t)}</span></div>`).join('');
+  document.getElementById('wlNav').innerHTML=
+    `<div class="fi${F.watch?' on':''}" data-wl>Matches<span class="n">${cnt(watchHit)}</span></div>`+
+    WATCHKW.map((k,i)=>`<div class="fi sub" data-wldel="${i}" title="click to remove">“${k}” ✕</div>`).join('')+
+    `<div class="fi sub" data-wladd>＋ add keyword</div>`;
+  document.getElementById('zNav').innerHTML=
+    (ZONES.length?ZONES.map(z=>`<div class="fi${F.zone===z.name?' on':''}" data-zone="${z.name}">${z.name}<span class="n">${cnt(x=>inZone(x,z))}</span></div>`).join(''):'')+
+    (ZONES.length?ZONES.map(z=>`<div class="fi sub" data-zdel="${z.name}">✕ ${z.name}</div>`).join(''):'')+
+    `<div class="fi sub" data-zadd>＋ add zone</div>`;
+}
+function renderStats(){
+  if(!DATA)return;
+  const day=Date.now()-864e5;
+  const d1=DATA.items.filter(a=>a.date&&Date.parse(a.date)>day);
+  const live=DATA.sources.filter(s=>s.status==='ok').length;
+  document.getElementById('stats').innerHTML=
+    st('items / 7d',DATA.items.length)+st('last 24h',d1.length)+
+    stB('critical',DATA.items.filter(a=>a.band==='CRIT').length,'CRIT')+
+    stB('high',DATA.items.filter(a=>a.band==='HIGH').length,'HIGH')+
+    st('conflict 24h',d1.filter(a=>a.axis==='Conflict').length,'c1',{spark:spark(series('c'),'#B0473A'),srg:surged(series('c'))})+
+    st('climate 24h',d1.filter(a=>a.axis==='Climate').length,'c2',{spark:spark(series('l'),'#2E7D6B'),srg:surged(series('l'))})+
+    st('s. asia 24h',d1.filter(a=>a.region==='South Asia').length)+
+    st('s.e. asia 24h',d1.filter(a=>a.region==='Southeast Asia').length)+
+    st('sources live',live+'/'+DATA.sources.length);
+}
+function stB(l,v,b){return `<div class="stat click${F.band===b?' on':''}" data-band="${b}" title="show all ${b} items"><span class="l">${l}</span><span class="v ${b==='CRIT'?'c1':''}">${v}</span></div>`;}
+function st(l,v,c,extra){return `<div class="stat"><span class="l">${l}</span><span class="v ${c||''}">${v}${extra&&extra.srg?'<span class="srg">SURGE</span>':''}</span>${extra&&extra.spark?extra.spark:''}</div>`;}
+function series(key){ if(!HIST||!HIST.days)return null; const d=HIST.days.slice(-7); return d.map(x=>{const r=x.regions||{}; const sa=r['South Asia']||{},se=r['Southeast Asia']||{}; return key==='c'?(sa.c||0)+(se.c||0):key==='l'?(sa.l||0)+(se.l||0):(sa.x||0)+(se.x||0);}); }
+function spark(vals,color){ if(!vals||vals.length<2)return ''; const mx=Math.max(...vals,1),w=42,bh=12,bw=w/vals.length-1.5; return `<svg class="spark" width="${w}" height="${bh}">`+vals.map((v,i)=>`<rect x="${i*(bw+1.5)}" y="${bh-(v/mx)*bh}" width="${bw}" height="${(v/mx)*bh||0.5}" fill="${color}" opacity="${i===vals.length-1?1:.45}"/>`).join('')+`</svg>`; }
+function surged(vals){ if(!vals||vals.length<4)return false; const cur=vals[vals.length-1],base=vals.slice(0,-1); const avg=base.reduce((a,b)=>a+b,0)/base.length; return cur>=5&&cur>1.8*avg; }
+function notifyNew(){
+  if(!DATA) return;
+  const links=new Set(DATA.items.map(a=>a.link));
+  if(prevLinks && WATCHKW.length && 'Notification' in window && Notification.permission==='granted'){
+    DATA.items.filter(a=>!prevLinks.has(a.link)&&watchHit(a)).slice(0,3).forEach(a=>{ try{ new Notification('Watchlist: '+a.title.slice(0,80),{body:meta(a.src).name}); }catch(e){} });
+  }
+  prevLinks=links;
+}
+function renderStamp(){
+  if(!DATA)return;
+  const mins=Math.round((Date.now()-Date.parse(DATA.generated_at))/6e4);
+  const rel=mins<60?mins+'m':Math.round(mins/60)+'h';
+  const stale=mins>180?` <span class="warn">· stale — check Actions</span>`:'';
+  document.getElementById('stamp').innerHTML=`updated <b>${rel} ago</b>${stale}`;
+}
+
+/* ---------- bookmarks ---------- */
+function loadMarks(){ try{return JSON.parse(localStorage.getItem('ipterm.bookmarks')||'{}');}catch(e){return {};} }
+function saveMarks(){ localStorage.setItem('ipterm.bookmarks',JSON.stringify(MARKS)); }
+let popEl=null;
+function openPop(link,anchor){
+  closePop();
+  const a=(DATA?DATA.items.find(x=>x.link===link):null)||MARKS[link]||{title:'',src:''};
+  const cur=MARKS[link]||{tags:[],note:''};
+  popEl=document.createElement('div'); popEl.className='pop';
+  popEl.innerHTML=`<h5>Bookmark → country tags</h5>
+    <div class="tags">${countryTags().map(t=>`<button class="tg${cur.tags.includes(t)?' on':''}" data-tag="${t}">${t}</button>`).join('')}</div>
+    <input id="ptag" placeholder="custom tag (enter to add)"/>
+    <textarea id="pnote" rows="2" placeholder="note (optional)">${cur.note||''}</textarea>
+    <div class="row">${MARKS[link]?'<button data-del>remove</button>':''}<button data-save class="go">save</button></div>`;
+  document.body.appendChild(popEl);
+  const r=anchor.getBoundingClientRect();
+  popEl.style.top=Math.min(window.innerHeight-320,r.bottom+6)+'px';
+  popEl.style.left=Math.max(8,Math.min(window.innerWidth-296,r.right-280))+'px';
+  const chosen=new Set(cur.tags);
+  popEl.addEventListener('click',e=>{
+    const tg=e.target.closest('[data-tag]');
+    if(tg){ const t=tg.dataset.tag; chosen.has(t)?chosen.delete(t):chosen.add(t); tg.classList.toggle('on'); return; }
+    if(e.target.closest('[data-del]')){ delete MARKS[link]; saveMarks(); closePop(); render(); return; }
+    if(e.target.closest('[data-save]')){
+      MARKS[link]={title:a.title,src:a.src,date:a.date||null,link,tags:[...chosen],note:popEl.querySelector('#pnote').value.trim(),added:MARKS[link]?.added||new Date().toISOString()};
+      saveMarks(); closePop(); render(); return;
+    }
+  });
+  popEl.querySelector('#ptag').addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&e.target.value.trim()){
+      const t=e.target.value.trim(); chosen.add(t); e.target.value='';
+      const b=document.createElement('button'); b.className='tg on'; b.dataset.tag=t; b.textContent=t;
+      popEl.querySelector('.tags').appendChild(b);
+    }
+  });
+}
+function closePop(){ if(popEl){popEl.remove();popEl=null;} }
+let markFilter=null;
+function renderMarks(){
+  const feed=document.getElementById('feed');
+  const all=Object.values(MARKS).sort((x,y)=>(y.added||'').localeCompare(x.added||''));
+  const tags=[...new Set(all.flatMap(m=>m.tags))].sort();
+  const list=markFilter?all.filter(m=>m.tags.includes(markFilter)):all;
+  document.getElementById('crumb').innerHTML=`Bookmarks${markFilter?' · '+markFilter:''} <small>${list.length} saved</small>`;
+  document.getElementById('clr').style.display=markFilter?'inline':'none';
+  const bar=tags.length?`<div class="empty" style="padding:0 0 4px;text-align:left;grid-column:1/-1">
+    <button class="tg${!markFilter?' on':''}" data-mf="">all</button> ${tags.map(t=>`<button class="tg${markFilter===t?' on':''}" data-mf="${t}">${t}</button>`).join(' ')}
+    &nbsp; <button class="tg" data-exp>⇩ export</button> <button class="tg" data-imp>⇧ import</button></div>`:'';
+  feed.innerHTML='<div style="padding:14px 16px">'+bar+(list.length?list.map(m=>{
+    const mm=meta(m.src);
+    return `<div class="tile" style="border-top-color:var(--nexus)">
+      <button class="star on" data-star="${encodeURIComponent(m.link)}" title="edit tags">★</button>
+      <div class="meta"><span class="code" title="${mm.name}">${m.src}</span><span class="time">${ago(m.date)}</span></div>
+      <a href="${m.link}" target="_blank" rel="noopener"><h3>${m.title}</h3></a>
+      <div class="foot">${m.tags.map(t=>`<span class="tchip">${t}</span>`).join('')}${m.note?`<span class="th">· ${m.note}</span>`:''}</div>
+    </div>`;}).join(''):'<div class="empty">No bookmarks yet — star any item in the feed.</div>')+'</div>';
+}
+function exportMarks(){
+  const blob=new Blob([JSON.stringify(MARKS,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='ip-terminal-bookmarks-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+}
+function importMarks(){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='.json';
+  inp.onchange=()=>{ const f=inp.files[0]; if(!f)return; const rd=new FileReader();
+    rd.onload=()=>{ try{ Object.assign(MARKS,JSON.parse(rd.result)); saveMarks(); renderMarks(); }catch(e){ alert('Invalid bookmarks file'); } };
+    rd.readAsText(f); };
+  inp.click();
+}
+
+/* ---------- about ---------- */
+function renderAbout(){
+  document.getElementById('aboutBody').innerHTML=`<div class="about">
+  <p>A two-axis monitor of <b style="color:var(--conflict)">armed conflict</b> and <b style="color:var(--climate)">climate change</b> across South and Southeast Asia. Feeds are fetched server-side by GitHub Actions every hour; this page just reads <span style="font-family:var(--mono)">data.json</span>.</p>
+  <h4>Tagging</h4>
+  <p>Each item is matched against keyword sets per axis and sub-tag (hover a sub-tag chip to see what matched). Items matching both axes get the <span class="nx" style="font-size:8.5px">NEXUS</span> badge — the conflict–climate intersection. Theater is content-based (seas, chokepoints, named features, littoral countries), falling back to the source's home theater. Regional, specialist and alert feeds only appear when an item names the region.</p>
+  <h4>Focus pages & map</h4>
+  <p>The Focus rail pins dedicated Philippines and Indonesia views (add more in one line in index.html). The Maps section is a folder of your own Google My Maps: add any link-shared map by pasting its URL (map ids stay in this browser, never in the repo), open maps full-pane, and layer the terminal&#8217;s live data into them via the auto-generated data.kml (all geolocated items, axis-colored, nexus flagged — re-import to refresh).</p>
+  <h4>Bookmarks</h4>
+  <p>Star any tile to file it under country tags (plus free-text tags and a note). Bookmarks live in this browser's storage — use export/import in the Bookmarks view to move or back them up. They'll migrate into the desktop app.</p>
+  <h4>Sources</h4>
+  <p>Tiers: International wires · Regional desks · Local littoral outlets · Specialist maritime press (Naval News, USNI) · Alert feeds (GDACS, ReliefWeb). Ownership tags (STATE / PUBLIC / EXILE / INDEP) appear in the source tooltip along with lean metadata, which is deliberately not surfaced in the UI.</p>
+  </div>`;
+}
+
+/* ---------- diagnostics ---------- */
+function renderDiag(){
+  if(!DATA)return;
+  const rows=DATA.sources;
+  document.getElementById('dtb').innerHTML=rows.map(d=>{
+    const cls=d.status==='ok'?'ok':(d.status==='empty'?'warn2':'fail');
+    return `<tr><td>${d.name}</td><td>${d.country||'—'}</td><td>${d.tier}</td><td>${d.method}</td><td>${d.count}</td><td class="${cls}">${d.status}</td><td>${d.ms}</td></tr>`;
+  }).join('');
+  const live=rows.filter(d=>d.status==='ok').length;
+  document.getElementById('dsum').innerHTML=`<span><b>${live}/${rows.length}</b> sources live</span><span><b>${DATA.items.length}</b> items</span><span>run: <b>${new Date(DATA.generated_at).toLocaleString()}</b></span>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  if(popEl&&!e.target.closest('.pop')&&!e.target.closest('[data-star]')) closePop();
+  const star=e.target.closest('[data-star]');
+  if(star){ openPop(decodeURIComponent(star.dataset.star),star); return; }
+  const mf=e.target.closest('[data-mf]');
+  if(mf!==null&&mf!==undefined&&mf.dataset&&('mf'in mf.dataset)){ markFilter=mf.dataset.mf||null; renderMarks(); return; }
+  if(e.target.closest('[data-exp]')){ exportMarks(); return; }
+  const om=e.target.closest('[data-openmap]'); if(om){ openMyMap(om.dataset.openmap); setViewBtns(); return; }
+  const rm=e.target.closest('[data-renmap]'); if(rm){ const mm=MYMAPS[rm.dataset.renmap]; const n=prompt('Map name:',mm.name); if(n){mm.name=n.trim()||mm.name; saveMyMaps(); renderMapsFolder();} return; }
+  const dm=e.target.closest('[data-delmap]'); if(dm){ if(confirm('Remove this map from the folder? (does not affect your Google account)')){ delete MYMAPS[dm.dataset.delmap]; saveMyMaps(); renderMapsFolder(); } return; }
+  if(e.target.closest('[data-addmap]')){
+    const url=prompt('Paste the My Maps share/view/embed link (map must be set to "anyone with link"):');
+    if(url){ const mid=extractMid(url);
+      if(!mid){ alert('No map id found — the link should contain "mid=..."'); }
+      else { const name=prompt('Name this map:','My map')||'My map';
+        MYMAPS[mid]={name:name.trim(),note:'',added:new Date().toISOString()}; saveMyMaps(); renderMapsFolder(); } }
+    return; }
+  if(e.target.closest('[data-imp]')){ importMarks(); return; }
+  const sb=e.target.closest('[data-band]');
+  if(sb){ const b=sb.dataset.band;
+    F={axis:null,sub:null,theater:null,tier:null,country:null,watch:false,zone:null,band:F.band===b?null:b,q:F.q};
+    if(VIEW==='marks')VIEW='feed'; setViewBtns(); render(); renderRail(); renderStats(); return; }
+  const xb=e.target.closest('[data-xn]'); if(xb){ const alts=xb.closest('.tile').querySelector('.alts'); if(alts) alts.style.display=alts.style.display==='block'?'none':'block'; return; }
+  const iv=e.target.closest('[data-inv]');
+  if(iv){ closePop(); const link=decodeURIComponent(iv.dataset.inv); const a=(DATA?DATA.items.find(x=>x.link===link):null); if(!a) return;
+    const dom=(meta(a.src).domain)||''; popEl=document.createElement('div'); popEl.className='pop';
+    popEl.innerHTML=`<h5>Investigate</h5>
+      <a class="tg" style="display:block;margin-bottom:5px" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent('"'+a.title.slice(0,90)+'"')}">Search this headline</a>
+      ${dom?`<a class="tg" style="display:block;margin-bottom:5px" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent('site:'+dom+' '+a.title.split(' ').slice(0,6).join(' '))}">Search on ${dom}</a>`:''}
+      <a class="tg" style="display:block;margin-bottom:5px" target="_blank" rel="noopener" href="https://web.archive.org/save/${a.link}">Archive to Wayback</a>
+      <a class="tg" style="display:block" target="_blank" rel="noopener" href="https://translate.google.com/translate?sl=auto&tl=en&u=${encodeURIComponent(a.link)}">Translate page</a>`;
+    document.body.appendChild(popEl); const r=iv.getBoundingClientRect();
+    popEl.style.top=Math.min(window.innerHeight-200,r.bottom+6)+'px'; popEl.style.left=Math.max(8,Math.min(window.innerWidth-296,r.right-280))+'px';
+    return; }
+  const fi=e.target.closest('.fi');
+  if(fi){
+    if('wl'in fi.dataset){ F.watch=!F.watch; if(VIEW==='marks')VIEW='feed'; setViewBtns(); render(); renderRail(); return; }
+    if('wldel'in fi.dataset){ WATCHKW.splice(+fi.dataset.wldel,1); saveWatch(); render(); renderRail(); return; }
+    if('wladd'in fi.dataset){ const k=prompt('Watch keyword (matches title, summary, countries):'); if(k&&k.trim()){ WATCHKW.push(k.trim()); saveWatch(); if(Notification&&Notification.permission==='default')Notification.requestPermission(); render(); renderRail(); } return; }
+    if('zone'in fi.dataset){ F.zone=F.zone===fi.dataset.zone?null:fi.dataset.zone; if(VIEW==='marks')VIEW='feed'; setViewBtns(); render(); renderRail(); return; }
+    if('zdel'in fi.dataset){ ZONES=ZONES.filter(z=>z.name!==fi.dataset.zdel); if(F.zone===fi.dataset.zdel)F.zone=null; saveZones(); render(); renderRail(); return; }
+    if('zadd'in fi.dataset){
+      const gaz=Object.assign({},(DATA&&DATA.centroids)||{},(DATA&&DATA.gaz)||{});
+      const p=prompt('Zone center — a place or country from the gazetteer (e.g. "Sulu", "Preah Vihear", "Bangladesh"):');
+      if(p){ const key=Object.keys(gaz).find(k=>k.toLowerCase()===p.trim().toLowerCase())||Object.keys(gaz).find(k=>k.toLowerCase().includes(p.trim().toLowerCase()));
+        if(!key){ alert('Not in the gazetteer — try a nearby city, feature, or country name.'); return; }
+        const km=parseInt(prompt('Radius in km:','300'))||300;
+        const name=prompt('Zone name:',key+' zone')||key+' zone';
+        ZONES.push({name:name.trim(),center:gaz[key],km}); saveZones(); render(); renderRail(); }
+      return; }
+    if('ax'in fi.dataset){
+      const ax=fi.dataset.ax||null, sub=fi.dataset.sub||null;
+      if(sub){ F.axis=fi.dataset.ax; F.sub=(F.sub===sub&&F.axis===fi.dataset.ax)?null:sub; }
+      else { F.axis=(F.axis===ax&&!F.sub)?null:ax; F.sub=null; }
+      if(!F.axis){F.sub=null;}
+    }
+    else if('th'in fi.dataset){ F.theater=fi.dataset.th||null; }
+    else if('co'in fi.dataset){ F.country=fi.dataset.co||null; }
+    else if('tier'in fi.dataset){ F.tier=fi.dataset.tier||null; }
+    if(VIEW==='marks') VIEW='feed'; setViewBtns(); render(); renderRail(); return;
+  }
+  if(e.target.closest('[data-x]')||e.target.id==='scrim'){ document.getElementById('scrim').classList.remove('show'); document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('show')); }
+});
+document.getElementById('sortT').onclick=()=>{ SORT=SORT==='new'?'sev':'new'; document.getElementById('sortT').textContent='sort: '+(SORT==='new'?'newest':'severity'); if(VIEW!=='marks')render(); };
+document.getElementById('bBrief').onclick=()=>{ genBrief(); document.getElementById('brief').style.display='flex'; };
+document.getElementById('brClose').onclick=()=>{ document.getElementById('brief').style.display='none'; };
+document.getElementById('brCopy').onclick=()=>{ navigator.clipboard.writeText(document.getElementById('briefBody').innerText).then(()=>{document.getElementById('brCopy').textContent='Copied ✓';setTimeout(()=>document.getElementById('brCopy').textContent='Copy',1500);}); };
+document.getElementById('brPrint').onclick=()=>{ const w=window.open('','_blank'); w.document.write('<html><head><title>Daily Brief</title><style>body{font-family:Georgia,serif;max-width:760px;margin:30px auto;line-height:1.5;color:#15171C}h1{font-size:12px}h2{font-size:11.5px;border-bottom:1px solid #ccc;padding-bottom:4px}a{color:#15171C}small{color:#888}</style></head><body>'+document.getElementById('briefBody').innerHTML+'</body></html>'); w.document.close(); w.print(); };
+function genBrief(){
+  const d=DATA; if(!d) return;
+  const day=Date.now()-864e5; const d1=d.items.filter(a=>a.date&&Date.parse(a.date)>day);
+  const top=(f,n)=>d.items.filter(f).sort((x,y)=>(y.sev||0)-(x.sev||0)).slice(0,n);
+  const li=a=>`<div class="bi">${a.band?`[${a.band}] `:''}<a href="${a.link}" target="_blank" rel="noopener"><b>${a.title}</b></a> <span class="ms">— ${meta(a.src).name}, ${ago(a.date)} ago${a.corrob>1?`, ×${a.corrob} sources`:''}</span></div>`;
+  let html=`<h1>Indo-Pacific Terminal — Daily Brief</h1><div class="ms">${new Date().toUTCString()} · ${d1.length} items last 24h · generated from ${d.sources.filter(s=>s.status==='ok').length} live sources</div>`;
+  for(const rg of ['South Asia','Southeast Asia']){
+    html+=`<h2>${rg} — Conflict</h2>`+top(a=>a.region===rg&&a.axis==='Conflict',6).map(li).join('');
+    html+=`<h2>${rg} — Climate</h2>`+top(a=>a.region===rg&&a.axis==='Climate',6).map(li).join('');
+  }
+  const bm=Object.values(MARKS); if(bm.length) html+=`<h2>Your bookmarks (${bm.length})</h2>`+bm.slice(0,10).map(m=>`<div class="bi"><a href="${m.link}"><b>${m.title}</b></a> <span class="ms">${m.tags.join(', ')}</span></div>`).join('');
+  document.getElementById('briefBody').innerHTML=html;
+}
+document.getElementById('q').addEventListener('input' ,e=>{F.q=e.target.value.trim(); if(VIEW!=='marks')render();});
+document.getElementById('clr').onclick=()=>{ if(VIEW==='marks'){markFilter=null;renderMarks();return;} F={axis:null,sub:null,theater:null,tier:null,country:null,watch:false,zone:null,band:null,q:''}; document.getElementById('q').value=''; render(); renderRail(); };
+document.getElementById('bFeed').onclick=()=>{VIEW='feed';setViewBtns();render();};
+document.getElementById('bMap').onclick=()=>{VIEW='maps';setViewBtns();render();};
+document.getElementById('mback').onclick=()=>{VIEW='maps';setViewBtns();render();};
+document.getElementById('bMarks').onclick=()=>{VIEW='marks';setViewBtns();renderMarks();};
+document.getElementById('bSrc').onclick=()=>{renderDiag();document.getElementById('scrim').classList.add('show');document.getElementById('dSrc').classList.add('show');};
+document.getElementById('bAbout').onclick=()=>{renderAbout();document.getElementById('scrim').classList.add('show');document.getElementById('dAbout').classList.add('show');};
+function showPane(p){ document.getElementById('feed').style.display=(p==='maps'||p==='mview')?'none':'grid'; document.getElementById('maps').style.display=p==='maps'?'block':'none'; document.getElementById('mviewer').style.display=p==='mview'?'flex':'none'; }
+/* ---------- My Maps folder ---------- */
+function loadMyMaps(){ try{return JSON.parse(localStorage.getItem('ipterm.mymaps')||'{}');}catch(e){return {};} }
+let MYMAPS=loadMyMaps();
+function saveMyMaps(){ localStorage.setItem('ipterm.mymaps',JSON.stringify(MYMAPS)); }
+function extractMid(url){ const m=(url||'').match(/[?&]mid=([A-Za-z0-9_-]+)/); return m?m[1]:null; }
+function renderMapsFolder(){
+  const el=document.getElementById('maps');
+  const entries=Object.entries(MYMAPS).sort((a,b)=>(b[1].added||'').localeCompare(a[1].added||''));
+  document.getElementById('crumb').innerHTML=`My Maps <small>${entries.length} map${entries.length===1?'':'s'}</small>`;
+  document.getElementById('clr').style.display='none';
+  el.innerHTML='<div class="mgrid">'+
+    entries.map(([mid,m])=>`<div class="mcard"><h3>${m.name}</h3><p>${m.note||''}</p>
+      <div class="row"><button class="open" data-openmap="${mid}">Open</button><button data-renmap="${mid}">Rename</button><button data-delmap="${mid}">Remove</button></div></div>`).join('')+
+    `<div class="mcard add" data-addmap>＋ Add a My Map<br><span style="font-size:8.5px">paste a share link</span></div>
+     <div class="mcard info"><h3>Live data → your maps</h3><p>Every fetch also writes <span style="font-family:var(--mono)">data.kml</span> — all geolocated items, colored by axis, nexus flagged. Download it from your terminal URL and import it as a layer in any My Map (re-import to refresh). Preview builds don't generate it.</p>
+      <div class="row"><a class="open" href="./data.kml" download>Download KML</a></div></div>
+  </div>`;
+}
+function openMyMap(mid){
+  const m=MYMAPS[mid]; if(!m) return;
+  document.getElementById('mvname').textContent=m.name;
+  document.getElementById('mvext').href='https://www.google.com/maps/d/viewer?mid='+mid;
+  document.getElementById('mvframe').src='https://www.google.com/maps/d/embed?mid='+mid;
+  VIEW='mview'; showPane('mview');
+}
+function setViewBtns(){ document.getElementById('bFeed').classList.toggle('on',VIEW==='feed'); document.getElementById('bMap').classList.toggle('on',VIEW==='maps'||VIEW==='mview'); document.getElementById('bMarks').classList.toggle('on',VIEW==='marks'); }
+
+let THEME=localStorage.getItem('ipterm.theme')||'phosphor';
+const THEMES=['phosphor','dusk','eink'], TLABEL={dusk:'Dusk',phosphor:'Phosphor',eink:'E-ink'};
+function applyTheme(){ document.body.dataset.theme=THEME; document.getElementById('themeT').textContent=TLABEL[THEME]; }
+document.getElementById('themeT').onclick=()=>{ THEME=THEMES[(THEMES.indexOf(THEME)+1)%THEMES.length]; localStorage.setItem('ipterm.theme',THEME); applyTheme(); };
+if(localStorage.getItem('ipterm.rail')==='off') document.body.classList.add('norail');
+document.getElementById('railT').onclick=()=>{ const off=document.body.classList.toggle('norail'); localStorage.setItem('ipterm.rail',off?'off':'on'); };
+applyTheme(); setViewBtns(); boot();
+setInterval(boot, 10*60*1000); // re-read data.json every 10 min
+</script>
+</body>
+</html>
