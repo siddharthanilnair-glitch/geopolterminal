@@ -1,0 +1,30 @@
+name: update-feeds
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+concurrency:
+  group: update-feeds
+  cancel-in-progress: true
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch and classify feeds
+        run: node fetch.mjs
+      - name: Commit data
+        run: |
+          git config user.name "ip-terminal-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data.json data.kml conflict.kml climate.kml nexus.kml history.json
+          git diff --cached --quiet || git commit -m "data: $(date -u +'%Y-%m-%dT%H:%M')Z"
+          git pull --rebase origin main || true
+          git push
